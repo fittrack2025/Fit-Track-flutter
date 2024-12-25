@@ -10,6 +10,7 @@ import 'register.dart';
 import 'login.dart';
 import 'reminder.dart';
 import 'products.dart';
+import 'selection.dart';
 
 // Import the WorkoutListPage
 // import 'login.dart'; // Import the LoginPage
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: ChatSwitchApp(), // Set LoginPage as the home screen
+      home: SelectTrainerDietitianPage(), // Set LoginPage as the home screen
       debugShowCheckedModeBanner: false,
     );
   }
