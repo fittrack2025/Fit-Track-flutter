@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'edit_profile.dart'; // Import the EditProfilePage here
 import 'reminder.dart'; // Import the ReminderPage here
 
 class ProfilePage extends StatelessWidget {
@@ -20,8 +21,7 @@ class ProfilePage extends StatelessWidget {
             const SizedBox(height: 20),
             CircleAvatar(
               radius: 60,
-              backgroundImage:
-                  AssetImage('assets/blum.png'), // Add your profile image
+              backgroundImage: AssetImage('assets/blum.png'),
             ),
             const SizedBox(height: 10),
             // User Name
@@ -45,7 +45,7 @@ class ProfilePage extends StatelessWidget {
             const SizedBox(height: 20),
             // Settings Section
             _sectionHeader('Settings'),
-            _settingsSection(context), // Pass context here
+            _settingsSection(context),
             const SizedBox(height: 20),
             // My Workouts Section
 
@@ -60,7 +60,6 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  // Helper to create record cards
   Widget _recordCard(String value, String label) {
     return Card(
       elevation: 2,
@@ -93,7 +92,6 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  // Section Header
   Widget _sectionHeader(String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -112,37 +110,38 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  // Settings Section
   Widget _settingsSection(BuildContext context) {
-    // Accept context here
     return Column(
       children: [
-        _settingsItem(context, Icons.account_circle, 'Edit Profile'),
+        _settingsItem(context, Icons.account_circle, 'Edit Profile',
+            () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const EditProfilePage()))),
         _settingsItem(
-            context, Icons.watch, 'Set reminder'), // Pass context here
-        _settingsItem(context, Icons.notifications, 'Notifications'),
-        _settingsItem(context, Icons.logout, 'Log Out'),
+            context,
+            Icons.watch,
+            'Set reminder',
+            () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ReminderApp()))),
+        _settingsItem(context, Icons.notifications, 'Notifications', () {}),
+        _settingsItem(context, Icons.logout, 'Log Out', () {}),
       ],
     );
   }
 
-  Widget _settingsItem(BuildContext context, IconData icon, String title) {
-    // Accept context here
+  Widget _settingsItem(
+      BuildContext context, IconData icon, String title, VoidCallback onTap) {
     return ListTile(
       leading: Icon(icon, color: Colors.blueAccent),
       title: Text(title),
       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      onTap: () {
-        // Navigate to the reminder setting page
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ReminderSettingPage()),
-        );
-      },
+      onTap: onTap,
     );
   }
 
-  // Awards Section
   Widget _awardsSection() {
     return Column(
       children: [
@@ -166,18 +165,6 @@ class ProfilePage extends StatelessWidget {
             color: Colors.black87,
           ),
         ),
-      ),
-    );
-  }
-}
-
-class ReminderSettingPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Set Reminder'),
-        backgroundColor: Colors.blueAccent,
       ),
     );
   }

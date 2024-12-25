@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:trial/bmi.dart';
+import 'package:trial/chat.dart';
 import 'package:trial/homepage.dart';
 
 import 'package:trial/suggestfood.dart';
 import 'workout.dart';
-import 'profile.dart'; // Import the WorkoutListPage
+import 'profile.dart';
+import 'register.dart';
+import 'login.dart';
+import 'reminder.dart';
+import 'products.dart';
+
+// Import the WorkoutListPage
 // import 'login.dart'; // Import the LoginPage
 
 void main() {
@@ -21,7 +29,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomePage(), // Set LoginPage as the home screen
+      home: ChatSwitchApp(), // Set LoginPage as the home screen
       debugShowCheckedModeBanner: false,
     );
   }

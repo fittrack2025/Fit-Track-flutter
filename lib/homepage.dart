@@ -22,6 +22,18 @@ class HomePage extends StatelessWidget {
           ],
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.person),
+            onPressed: () {
+              // Navigate to the ProfilePage
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfilePage()),
+              );
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -87,7 +99,8 @@ class HomePage extends StatelessWidget {
                       label: "Chat",
                       destination: Scaffold(
                         appBar: AppBar(title: Text("Chat Section")),
-                        body: Center(child: Text("Chat functionality coming soon!")),
+                        body: Center(
+                            child: Text("Chat functionality coming soon!")),
                       ),
                     ),
                     _buildCard(
@@ -176,7 +189,10 @@ class HomePage extends StatelessWidget {
 
   // Helper method to build swipeable cards
   Widget _buildCard(BuildContext context,
-      {required Color color, required IconData icon, required String label, required Widget destination}) {
+      {required Color color,
+      required IconData icon,
+      required String label,
+      required Widget destination}) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
