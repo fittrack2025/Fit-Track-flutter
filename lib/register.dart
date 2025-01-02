@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:trial/bmi.dart';
 
 class Sign extends StatelessWidget {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,7 +14,7 @@ class Sign extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/blue.png'), // Path to your image
+                image: AssetImage('assets/blum.png'), // Path to your image
                 fit: BoxFit.cover,
               ),
             ),
@@ -44,6 +48,7 @@ class Sign extends StatelessWidget {
                     ),
                     SizedBox(height: 30),
                     TextField(
+                      controller: nameController,
                       decoration: InputDecoration(
                         labelText: 'Name',
                         prefixIcon: Icon(
@@ -59,6 +64,7 @@ class Sign extends StatelessWidget {
                     ),
                     SizedBox(height: 20),
                     TextField(
+                      controller: emailController,
                       decoration: InputDecoration(
                         labelText: 'Email',
                         prefixIcon: Icon(
@@ -74,6 +80,7 @@ class Sign extends StatelessWidget {
                     ),
                     SizedBox(height: 20),
                     TextField(
+                      controller: passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         labelText: 'Password',
@@ -93,6 +100,10 @@ class Sign extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {
                         // Action for sign-up
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (ctx) => BMICalculator(name: nameController.text,password: passwordController.text,email: emailController.text,)));
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color.fromARGB(255, 30, 125, 234),

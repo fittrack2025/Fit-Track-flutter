@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trial/services/loginapi.dart';
 import 'register.dart'; // Import the Sign class
 
 class Loginpage extends StatefulWidget {
@@ -11,6 +12,9 @@ class Loginpage extends StatefulWidget {
 class _LoginpageState extends State<Loginpage> {
   bool isPasswordVisible = true;
 
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +23,7 @@ class _LoginpageState extends State<Loginpage> {
         height: double.infinity,
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/blue.png'),
+            image: AssetImage('assets/blum.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -40,6 +44,7 @@ class _LoginpageState extends State<Loginpage> {
               ),
               const SizedBox(height: 40),
               TextField(
+                controller: emailController,
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   labelText: 'Username',
@@ -60,6 +65,7 @@ class _LoginpageState extends State<Loginpage> {
               ),
               const SizedBox(height: 20),
               TextField(
+                controller: passwordController,
                 obscureText: isPasswordVisible,
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
@@ -96,6 +102,7 @@ class _LoginpageState extends State<Loginpage> {
               ElevatedButton(
                 onPressed: () {
                   // Action for login
+                  loginapi(emailController.text, passwordController.text);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blueAccent,

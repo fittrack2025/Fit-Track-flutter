@@ -1,7 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:trial/services/regApi.dart';
 
 class SelectTrainerDietitianPage extends StatefulWidget {
-  const SelectTrainerDietitianPage({super.key});
+  const SelectTrainerDietitianPage(
+      {super.key,
+      required this.name,
+      required this.password,
+      required this.email,
+      required this.bmi,
+      required this.height,
+      required this.weight,
+      required this.age});
+  final name;
+  final password;
+  final email;
+  final bmi;
+  final height;
+  final weight;
+  final age;
 
   @override
   _SelectTrainerDietitianPageState createState() =>
@@ -12,6 +28,7 @@ class _SelectTrainerDietitianPageState
     extends State<SelectTrainerDietitianPage> {
   String? selectedTrainer;
   String? selectedDietitian;
+  Map<dynamic, dynamic> datas = {};
 
   final List<Map<String, String>> trainers = [
     {
@@ -57,12 +74,23 @@ class _SelectTrainerDietitianPageState
       );
       return;
     }
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-            "Selected Trainer: $selectedTrainer\nSelected Dietitian: $selectedDietitian"),
-      ),
-    );
+    print('object');
+    datas = {
+      'name': widget.name,
+      'age': widget.age,
+      'email': widget.email,
+      'username': widget.email,
+      'password': widget.password,
+      'height': widget.height,
+      'weight': widget.weight,
+      'bmi': widget.bmi,
+      'calorie': widget.bmi,
+      'preference': widget.bmi,
+      'health_issue': widget.bmi,
+      'trainerid': 1,
+      'dietitionid': 1
+    };
+    registerApi(datas, context);
   }
 
   Widget buildListItem(
@@ -171,7 +199,9 @@ class _SelectTrainerDietitianPageState
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: onContinue,
+              onPressed: () {
+                onContinue();
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blueAccent,
                 minimumSize: const Size(double.infinity, 50),
@@ -183,11 +213,4 @@ class _SelectTrainerDietitianPageState
       ),
     );
   }
-}
-
-void main() {
-  runApp(const MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: SelectTrainerDietitianPage(),
-  ));
 }

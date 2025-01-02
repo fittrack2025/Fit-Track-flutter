@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: SelectTrainerDietitianPage(), // Set LoginPage as the home screen
+      home: Loginpage(), // Set LoginPage as the home screen
       debugShowCheckedModeBanner: false,
     );
   }

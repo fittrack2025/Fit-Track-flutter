@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: BMICalculator(),
-    );
-  }
-}
+import 'package:trial/selection.dart';
 
 class BMICalculator extends StatefulWidget {
+  final email;
+  final name;
+  final password;
+
+  const BMICalculator(
+      {super.key,
+      required this.email,
+      required this.name,
+      required this.password});
+
   @override
   _BMICalculatorState createState() => _BMICalculatorState();
 }
@@ -30,13 +29,30 @@ class _BMICalculatorState extends State<BMICalculator> {
 
     if (height != null && height > 0 && weight != null && weight > 0) {
       setState(() {
-        _bmi = weight / ((height / 100) * (height / 100)); // Height is converted to meters
+        _bmi = weight /
+            ((height / 100) * (height / 100)); // Height is converted to meters
       });
     } else {
       setState(() {
         _bmi = 0.0;
       });
     }
+  }
+
+  void _onContinuePressed() {
+    // Handle the action when the "Continue" button is pressed
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (ctx) => SelectTrainerDietitianPage(
+                  bmi: _bmi,
+                  age: ageController.text,
+                  height: heightController.text,
+                  weight: weightController.text,
+                  email: widget.email,
+                  password: widget.password,
+                  name: widget.name,
+                )));
   }
 
   @override
@@ -88,13 +104,14 @@ class _BMICalculatorState extends State<BMICalculator> {
             Center(
               child: Column(
                 children: [
-                  Text(
+                  const Text(
                     'Your BMI:',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   Text(
                     _bmi > 0 ? _bmi.toStringAsFixed(2) : '--',
-                    style: TextStyle(fontSize: 32, color: Colors.blueAccent),
+                    style:
+                        const TextStyle(fontSize: 32, color: Colors.blueAccent),
                   ),
                 ],
               ),
@@ -111,7 +128,23 @@ class _BMICalculatorState extends State<BMICalculator> {
                             : _bmi < 29.9
                                 ? 'Overweight'
                                 : 'Obesity',
-                style: TextStyle(fontSize: 18, color: Colors.black87),
+                style: const TextStyle(fontSize: 18, color: Colors.black87),
+              ),
+            ),
+            const SizedBox(height: 24),
+            Center(
+              child: ElevatedButton(
+                onPressed: _onContinuePressed,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue, // Button color
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                ),
+                child: const Text(
+                  'Continue',
+                  style: TextStyle(
+                      fontSize: 16, color: Colors.white), // White text
+                ),
               ),
             ),
           ],
