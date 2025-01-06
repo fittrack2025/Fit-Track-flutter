@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:trial/ai.dart';
+import 'package:trial/chat.dart';
+import 'package:trial/services/getProfile.dart';
+import 'package:trial/services/trainerapi.dart';
+import 'package:trial/services/viewworkoutapi.dart';
 import 'diet.dart';
 import 'workout.dart';
 import 'suggestfood.dart'; // Import FoodSuggestionsPage
 import 'profile.dart'; // Import ProfilePage
 import 'package:intl/intl.dart'; // Import package for date formatting
+
+
+
+
+ValueNotifier<double>workoutprogress=ValueNotifier(0.1);
+ValueNotifier<double>caloriprogress=ValueNotifier(0.2);
 
 class HomePage extends StatelessWidget {
   @override
@@ -13,7 +24,7 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Row(
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.fitness_center),
@@ -25,7 +36,8 @@ class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.person),
-            onPressed: () {
+            onPressed: () async{
+              await getUserProfile();
               // Navigate to the ProfilePage
               Navigator.push(
                 context,
@@ -49,24 +61,29 @@ class HomePage extends StatelessWidget {
               SizedBox(height: 20),
 
               // Search Box
-              _buildSearchBox(context),
-              SizedBox(height: 20),
+              // _buildSearchBox(context),
+              // SizedBox(height: 20),
 
               // Progress Cards
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildCircularProgressCard(
-                    context,
-                    label: "Workout Progress",
-                    progress: 0.6, // Example value (60%)
-                    color: Colors.blueAccent,
+                  ValueListenableBuilder(valueListenable: workoutprogress,
+                    builder: (context, value, child) => 
+                     _buildCircularProgressCard(
+                      context,
+                      label: "Workout Progress",
+                      progress: workoutprogress.value, // Example value (60%)
+                      color: Colors.blueAccent,
+                    ),
                   ),
-                  _buildCircularProgressCard(
-                    context,
-                    label: "Calories Intake",
-                    progress: 0.3, // Example value (30%)
-                    color: Colors.green,
+                  ValueListenableBuilder(valueListenable: caloriprogress,builder: (context, value, child) => 
+                    _buildCircularProgressCard(
+                      context,
+                      label: "Calories Intake",
+                      progress: caloriprogress.value, // Example value (30%)
+                      color: Colors.green,
+                    ),
                   ),
                 ],
               ),
@@ -78,9 +95,11 @@ class HomePage extends StatelessWidget {
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
+                
+
                     _buildCard(
                       context,
-                      color: Colors.blueAccent,
+                      color: Colors.blue,
                       icon: Icons.fitness_center,
                       label: "Workout",
                       destination: WorkoutListPage(),
@@ -90,18 +109,14 @@ class HomePage extends StatelessWidget {
                       color: Colors.green,
                       icon: Icons.restaurant,
                       label: "Diet Plan",
-                      destination: FoodSuggestionsPage(),
+                      destination: ChatScreen(),
                     ),
                     _buildCard(
                       context,
                       color: Colors.orange,
                       icon: Icons.chat,
                       label: "Chat",
-                      destination: Scaffold(
-                        appBar: AppBar(title: Text("Chat Section")),
-                        body: Center(
-                            child: Text("Chat functionality coming soon!")),
-                      ),
+                      destination: ChatWithDietitianTrainer()
                     ),
                     _buildCard(
                       context,

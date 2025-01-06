@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:trial/homepage.dart';
+import 'package:trial/login.dart';
 import 'package:trial/services/loginapi.dart';
 
 final Dio _dio = Dio();
@@ -13,7 +14,7 @@ Future<Map<String, dynamic>> registerApi(datass, context) async {
     print('lllll');
     if (response.statusCode == 201) {
       // Assuming 201 for successful registration
-      Navigator.push(context, MaterialPageRoute(builder: (ctxt) => HomePage()));
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (ctxt) => Loginpage()),(route) => false,);
       return {
         'success': true,
         'data': response.data,

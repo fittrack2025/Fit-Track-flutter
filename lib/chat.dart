@@ -1,16 +1,6 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(ChatSwitchApp());
 
-class ChatSwitchApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: ChatWithDietitianTrainer(),
-    );
-  }
-}
 
 class ChatWithDietitianTrainer extends StatelessWidget {
   @override
@@ -101,3 +91,6 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 }
+
+
+// 

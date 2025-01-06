@@ -1,198 +1,181 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
+    import 'package:flutter/material.dart';
+import 'package:alarm/alarm.dart';
 import 'package:intl/intl.dart';
-import 'profile.dart';  // Import ProfilePage
 
-class ReminderApp extends StatelessWidget {
-  const ReminderApp({super.key});
-
+class AlarmSettingScreen extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const ReminderPage(),
-      routes: {
-        '/reminder': (context) => const ReminderPage(),
-      },
-    );
-  }
+  _AlarmSettingScreenState createState() => _AlarmSettingScreenState();
 }
 
-class ReminderPage extends StatefulWidget {
-  const ReminderPage({super.key});
+class _AlarmSettingScreenState extends State<AlarmSettingScreen> {
+  DateTime? _selectedDate;
+  TimeOfDay _selectedTime = TimeOfDay.now();
+  TextEditingController _messageController = TextEditingController();
 
-  @override
-  State<ReminderPage> createState() => _ReminderPageState();
-}
-
-class _ReminderPageState extends State<ReminderPage> {
-  final FlutterLocalNotificationsPlugin _notificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  DateTime? _selectedDateTime;
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeNotifications();
-    tz.initializeTimeZones(); // Initialize timezones
-  }
-
-  void _initializeNotifications() async {
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-    const InitializationSettings initializationSettings =
-        InitializationSettings(android: initializationSettingsAndroid);
-    await _notificationsPlugin.initialize(initializationSettings);
-  }
-
-  void _scheduleNotification(
-      String title, String description, DateTime dateTime) async {
-    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
-      'reminder_channel',
-      'Reminders',
-      importance: Importance.high,
-      priority: Priority.high,
-    );
-
-    const NotificationDetails platformDetails =
-        NotificationDetails(android: androidDetails);
-
-    final tz.TZDateTime tzDateTime = tz.TZDateTime.from(dateTime, tz.local);
-
-    await _notificationsPlugin.zonedSchedule(
-      0,
-      title,
-      description,
-      tzDateTime,
-      platformDetails,
-      androidAllowWhileIdle: true,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-    );
-  }
-
-  void _pickDateTime() async {
+  Future<void> _pickDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime(2100),
     );
-
     if (pickedDate != null) {
-      final TimeOfDay? pickedTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
-      );
-
-      if (pickedTime != null) {
-        setState(() {
-          _selectedDateTime = DateTime(
-            pickedDate.year,
-            pickedDate.month,
-            pickedDate.day,
-            pickedTime.hour,
-            pickedTime.minute,
-          );
-        });
-      }
+      setState(() {
+        _selectedDate = pickedDate;
+      });
     }
   }
 
-  void _createReminder() {
-    if (_titleController.text.isEmpty ||
-        _descriptionController.text.isEmpty ||
-        _selectedDateTime == null) {
+  Future<void> _pickTime(BuildContext context) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: _selectedTime,
+    );
+    if (pickedTime != null) {
+      setState(() {
+        _selectedTime = pickedTime;
+      });
+    }
+  }
+
+  void _setAlarm() {
+    if (_selectedDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please fill all fields")),
+        SnackBar(content: Text('Please select a date for the alarm')),
       );
       return;
     }
 
-    _scheduleNotification(
-      _titleController.text,
-      _descriptionController.text,
-      _selectedDateTime!,
+    final alarmDateTime = DateTime(
+      _selectedDate!.year,
+      _selectedDate!.month,
+      _selectedDate!.day,
+      _selectedTime.hour,
+      _selectedTime.minute,
     );
 
+    if (alarmDateTime.isBefore(DateTime.now())) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Selected date and time must be in the future')),
+      );
+      return;
+    }
+
+    _scheduleAlarm(alarmDateTime);
+  }
+
+  void _scheduleAlarm(DateTime time) async {
+    final alarmSettings = AlarmSettings(
+      notificationSettings: NotificationSettings(
+          title: 'Alarm',
+          body: _messageController.text,
+          stopButton: 'Stop',
+          icon: '⏰'),
+      id: 1,
+      dateTime: time,
+      assetAudioPath: 'assets/alarm_sound.mp3',
+      loopAudio: true,
+      vibrate: true,
+      fadeDuration: 3,
+      warningNotificationOnKill: true,
+    );
+
+    await Alarm.set(alarmSettings: alarmSettings);
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Reminder Set Successfully!")),
+      SnackBar(
+          content: Text(
+              'Alarm set for ${DateFormat('yyyy-MM-dd hh:mm a').format(time)}')),
     );
-
-    _titleController.clear();
-    _descriptionController.clear();
-    setState(() {
-      _selectedDateTime = null;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Set Reminder'),
-        backgroundColor: Colors.blueAccent,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            // Navigate to ProfilePage when back arrow is pressed
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const ProfilePage()),
-            );
-          },
-        ),
+        title: Text('Set Alarm'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
-              controller: _titleController,
-              decoration: const InputDecoration(labelText: "Reminder Title"),
+            Text(
+              'Select Date:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _descriptionController,
-              decoration: const InputDecoration(labelText: "Reminder Description"),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  _selectedDateTime == null
-                      ? "No Date Selected"
-                      : DateFormat("yyyy-MM-dd HH:mm").format(_selectedDateTime!),
-                  style: const TextStyle(fontSize: 16),
+            SizedBox(height: 10),
+            GestureDetector(
+              onTap: () => _pickDate(context),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                ElevatedButton(
-                  onPressed: _pickDateTime,
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
-                  child: const Text("Pick Date & Time"),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      _selectedDate != null
+                          ? DateFormat('yyyy-MM-dd').format(_selectedDate!)
+                          : 'Select a date',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Icon(Icons.calendar_today),
+                  ],
                 ),
-              ],
-            ),
-            const Spacer(),
-            ElevatedButton(
-              onPressed: _createReminder,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-                minimumSize: const Size(double.infinity, 50),
               ),
-              child: const Text("Set Reminder"),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Select Time:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            GestureDetector(
+              onTap: () => _pickTime(context),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      _selectedTime.format(context),
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Icon(Icons.access_time),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Alarm Message:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            TextField(
+              controller: _messageController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Enter alarm message',
+              ),
+            ),
+            Spacer(),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _setAlarm,
+                child: Text('Set Alarm'),
+              ),
             ),
           ],
         ),
       ),
     );
   }
-}
-
-void main() {
-  runApp(const ReminderApp());
 }

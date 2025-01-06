@@ -12,8 +12,8 @@ class Loginpage extends StatefulWidget {
 class _LoginpageState extends State<Loginpage> {
   bool isPasswordVisible = true;
 
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  TextEditingController emailController = TextEditingController(text: "jaban@gmail.com");
+  TextEditingController passwordController = TextEditingController(text: "1234");
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +102,7 @@ class _LoginpageState extends State<Loginpage> {
               ElevatedButton(
                 onPressed: () {
                   // Action for login
-                  loginapi(emailController.text, passwordController.text);
+                  loginapi(emailController.text, passwordController.text,context);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blueAccent,
