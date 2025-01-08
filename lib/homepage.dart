@@ -13,7 +13,7 @@ import 'package:intl/intl.dart'; // Import package for date formatting
 
 
 
-ValueNotifier<double>workoutprogress=ValueNotifier(0.1);
+ValueNotifier<double>workoutprogress=ValueNotifier(0.0);
 ValueNotifier<double>caloriprogress=ValueNotifier(0.2);
 
 class HomePage extends StatelessWidget {

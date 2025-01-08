@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:trial/services/diatetianChats.dart';
+import 'package:trial/services/getProfile.dart';
+import 'package:trial/services/loginapi.dart';
 
 
 
@@ -6,6 +9,7 @@ class ChatWithDietitianTrainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
+      
       length: 2,
       child: Scaffold(
         appBar: AppBar(
@@ -18,9 +22,10 @@ class ChatWithDietitianTrainer extends StatelessWidget {
           ),
         ),
         body: TabBarView(
+          physics: NeverScrollableScrollPhysics(),
           children: [
-            ChatPage(title: 'Dietitian'),
-            ChatPage(title: 'Trainer'),
+            ChatPage(title: 'Dietitian',sendId:loginId ,reciveId: profiledatacore['dietition_login_id'],),
+            ChatPage(title: 'Trainer',sendId: loginId,reciveId:profiledatacore['trainer_login_id'] ,),
           ],
         ),
       ),
@@ -29,8 +34,10 @@ class ChatWithDietitianTrainer extends StatelessWidget {
 }
 
 class ChatPage extends StatefulWidget {
+  final sendId;
+  final reciveId;
   final String title;
-  const ChatPage({Key? key, required this.title}) : super(key: key);
+  const ChatPage({Key? key, required this.title,required this.sendId,required this.reciveId}) : super(key: key);
 
   @override
   _ChatPageState createState() => _ChatPageState();
@@ -38,15 +45,29 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _messageController = TextEditingController();
-  final List<String> _messages = [];
+  List<Map<String, dynamic>> _messages = [];
 
-  void _sendMessage() {
+  void _sendMessage()async {
     if (_messageController.text.isNotEmpty) {
+      await senddiatetianChats(widget.sendId,widget. reciveId, _messageController.text);
+        _messages=await  getdiatetianChats(widget.sendId,widget. reciveId);
       setState(() {
-        _messages.add(_messageController.text);
+   
         _messageController.clear();
       });
     }
+  }
+  @override
+  void initState() {
+   ggetdata();
+    super.initState();
+  }
+
+  void ggetdata()async{
+     _messages=await  getdiatetianChats(widget.sendId,widget. reciveId);
+     setState(() {
+       
+     });
   }
 
   @override
@@ -58,7 +79,7 @@ class _ChatPageState extends State<ChatPage> {
             itemCount: _messages.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text(_messages[index]),
+                title: Text(_messages[index]['message']),
                 leading: CircleAvatar(
                   child: Text(widget.title[0]),
                 ),

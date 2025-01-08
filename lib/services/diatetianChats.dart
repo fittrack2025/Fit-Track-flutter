@@ -7,11 +7,12 @@ import 'package:trial/services/loginapi.dart';
   // Replace with your API endpoint
   // final String baseUrl = 'https://api.example.com/user/profiles'; // Updated endpoint for multiple profiles
 
-  Future<List<Map<String, dynamic>>> getdiatetianChats() async {
+  Future<List<Map<String, dynamic>>> getdiatetianChats(sendId,reciveId) async {
     try {
-      final response = await _dio.get('$baseUrl/ffgjh'); // Make the GET request
+      final response = await _dio.get('$baseUrl/chat/$sendId/$reciveId',); // Make the GET request
 
       if (response.statusCode == 200) {
+        print(response.data);
         // Return the JSON response as a List<Map<String, dynamic>>
         return List<Map<String, dynamic>>.from(response.data);
       } else {
@@ -24,11 +25,12 @@ import 'package:trial/services/loginapi.dart';
     }
   }
 
-   Future<void> senddiatetianChats() async {
+   Future<void> senddiatetianChats(sendId,reciveId,msg) async {
     try {
-      final response = await _dio.get('$baseUrl/ffgjh'); // Make the GET request
+      final response = await _dio.post('$baseUrl/chat/$sendId/$reciveId',data: {'message':msg}); // Make the GET request
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
+        print(response.data);
         // Return the JSON response as a List<Map<String, dynamic>>
        print('success');
       } else {

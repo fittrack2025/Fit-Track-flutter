@@ -1,15 +1,13 @@
 import 'package:dio/dio.dart';
+import 'package:trial/services/loginapi.dart';
 
 final Dio _dio = Dio(
-  BaseOptions(
-    baseUrl: 'http://192.168.1.196:5000/',
-     // Set receive timeout
-  ),
+ 
 );
 
 Future<List<dynamic>> trainerApi() async {
   try {
-    final response = await _dio.get('/ViewTrainerAPI');
+    final response = await _dio.get('$baseUrl/ViewTrainerAPI');
     
     if (response.statusCode == 200 && response.data != null) {
       // Ensure data is returned in a list format

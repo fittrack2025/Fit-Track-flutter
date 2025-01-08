@@ -291,6 +291,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:trial/profile.dart';
+import 'package:trial/services/getProfile.dart';
 import 'package:trial/services/loginapi.dart';
 
 class EditProfilePage extends StatefulWidget {
@@ -333,7 +335,7 @@ String? _selectedval;
 
   // Function to send data to the API using Dio
   Future<void> _updateProfile() async {
-    const String apiUrl = 'http://192.168.1.196:5000/EditProfile'; // Replace with your API endpoint
+     String apiUrl = '$baseUrl/EditProfile'; // Replace with your API endpoint
 
     Dio dio = Dio();
 
@@ -355,6 +357,15 @@ String? _selectedval;
 
       if (response.statusCode == 200) {
         // Successfully updated profile
+ await getUserProfile();
+         Navigator.pop(context);
+      Navigator.pop(context);
+      
+              // Navigate to the ProfilePage
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfilePage()),
+              );
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(response.data['message'] ?? 'Profile updated successfully')),
         );

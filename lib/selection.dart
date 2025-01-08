@@ -217,6 +217,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:trial/services/loginapi.dart';
 import 'package:trial/services/regApi.dart';
 
 class SelectTrainerDietitianPage extends StatefulWidget {
@@ -258,9 +259,7 @@ class _SelectTrainerDietitianPageState
   bool isLoading = true;
 
   final Dio _dio = Dio(
-    BaseOptions(
-      baseUrl: 'http://192.168.1.196:5000/', // Replace with your actual base URL
-    ),
+    
   );
 
   @override
@@ -272,7 +271,7 @@ class _SelectTrainerDietitianPageState
   Future<void> fetchData() async {
     try {
       print("Fetching trainer and dietitian data...");
-      final response = await _dio.get('/ViewTrainerAPI');
+      final response = await _dio.get('$baseUrl/ViewTrainerAPI');
 
       print("Response: ${response.data}");
 

@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:trial/bmi.dart';
 
-class Sign extends StatelessWidget {
+class Sign extends StatefulWidget {
+  @override
+  State<Sign> createState() => _SignState();
+}
+
+class _SignState extends State<Sign> {
   TextEditingController emailController = TextEditingController();
+
   TextEditingController passwordController = TextEditingController();
+
   TextEditingController nameController = TextEditingController();
+
+  bool obsecure=true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,14 +91,19 @@ class Sign extends StatelessWidget {
                     SizedBox(height: 20),
                     TextField(
                       controller: passwordController,
-                      obscureText: true,
+                      obscureText: obsecure,
                       decoration: InputDecoration(
                         labelText: 'Password',
                         prefixIcon: Icon(
                           Icons.lock,
                           color: Color.fromARGB(255, 15, 102, 225),
                         ),
-                        suffixIcon: Icon(Icons.visibility_off),
+                        suffixIcon: IconButton(onPressed: (){
+                          obsecure=!obsecure;
+                          setState(() {
+                            
+                          });
+                        }, icon: obsecure?Icon(Icons.visibility_off):Icon(Icons.visibility)),
                         filled: true,
                         fillColor: Colors.white.withOpacity(0.8),
                         border: OutlineInputBorder(
