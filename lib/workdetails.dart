@@ -186,19 +186,22 @@ import 'package:trial/homepage.dart';
 import 'package:trial/services/loginapi.dart';
 import 'package:video_player/video_player.dart';
 
+List<String>viewedIndex=[];
+
 class WorkoutDetailPage extends StatefulWidget {
   final String title;
   final String description;
   final List<Map<String, String>> setsAndReps;
   final String image;
   final Function(bool) onCompletionUpdate;
+  final index;
 
   WorkoutDetailPage({
     required this.title,
     required this.description,
     required this.setsAndReps,
     required this.image,
-    required this.onCompletionUpdate,
+    required this.onCompletionUpdate, this.index,
   });
 
   @override
@@ -257,8 +260,10 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                 child: ElevatedButton(
                   onPressed: () {
                     setState(() {
+                      viewedIndex.add(widget.index['name']);
                       isCompleted = !isCompleted;
-                      workoutprogress.value=workoutprogress.value+0.1;
+                      workoutprogress.value=workoutprogress.value+0.2;
+                      print(workoutprogress.value);
                     });
                     widget.onCompletionUpdate(isCompleted);
                     Navigator.pop(context);

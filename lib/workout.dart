@@ -156,7 +156,7 @@ print(response.data);
                                       title: const Text('Workouts'),
                                       children: (day['videos'] ?? []).map<Widget>((workout) {
                                         final isCompleted =
-                                            workoutCompletion[workout['name'] ?? ''] ?? false;
+                                            viewedIndex.contains(workout['name'])?true:false;
                                         return Column(
                                           children: [
                                             ListTile(
@@ -181,6 +181,7 @@ print(response.data);
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) => WorkoutDetailPage(
+                                                      index: workout,
                                                       title: workout['name'] ?? 'No Title',
                                                       description:
                                                           workout['description'] ?? 'No description',

@@ -12,7 +12,7 @@ class Loginpage extends StatefulWidget {
 class _LoginpageState extends State<Loginpage> {
   bool isPasswordVisible = true;
 
-  TextEditingController emailController = TextEditingController(text: "jaban@gmail.com");
+  TextEditingController emailController = TextEditingController(text: "jibinraj@gmail.com");
   TextEditingController passwordController = TextEditingController(text: "1234");
 
   @override

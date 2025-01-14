@@ -73,7 +73,8 @@ class HomePage extends StatelessWidget {
                      _buildCircularProgressCard(
                       context,
                       label: "Workout Progress",
-                      progress: workoutprogress.value, // Example value (60%)
+                      progress: workoutprogress.value = workoutprogress.value > 1.0 ? 1.0 : workoutprogress.value,
+
                       color: Colors.blueAccent,
                     ),
                   ),
